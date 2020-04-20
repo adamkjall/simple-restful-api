@@ -23,32 +23,22 @@ export const useAPI = () => {
         setMembers(response);
         break;
       case "POST":
-        setMembers((members) => [...members, response]);
+        setMembers((prev) => [...prev, response]);
         break;
       case "PUT":
-        // const updatedMembers = members.map((member) => {
-        //   if (member.id === response.id) return response;
-        //   else return member;
-        // });
-        setMembers((members) =>
-          members.map((member) => {
+        setMembers((prev) =>
+          prev.map((member) => {
             if (member.id === response.id) return response;
             else return member;
           })
         );
         break;
       case "DELETE":
-        // const filteredMembers = members.filter(
-        //   (member) => member.id !== response.id
-        // );
-        setMembers((members) =>
-          members.filter((member) => member.id !== response.id)
+        setMembers((prev) =>
+          prev.filter((member) => member.id !== response.id)
         );
-        break;
-      default:
-        setMembers([]);
     }
-  }, [response, request]);
+  }, [response]);
 
   const getMembers = () => {
     setRequest({

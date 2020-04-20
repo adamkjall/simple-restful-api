@@ -15,13 +15,17 @@ const MemberDetails = () => {
 
   if (loading || !member) return <h1>Loading... </h1>;
 
+  const date = new Date(member.createdAt);
+
   return (
     <div className="member-details">
       <img src={"https://robohash.org/" + member.id} alt="member profile" />
       <div className="content">
         <h3 className="name">{member.name}</h3>
-        <p className="catch-phrase">{member.catchPhrase}</p>
-        <p>{member.createdAt}</p>
+        <p className="catch-phrase">”{member.catchPhrase}”</p>
+        <p className="created-at">
+          Created at: {date.toLocaleTimeString()} {date.toDateString()}
+        </p>
       </div>
     </div>
   );

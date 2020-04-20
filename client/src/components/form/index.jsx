@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import { useAPI } from "../../hooks/useAPI";
-
 import MemberContext from "../../contexts/member-context/context";
 
 import "./styles.scss";
@@ -12,23 +10,25 @@ const Form = () => {
     name: "",
     catchPhrase: "",
   });
+  const [memberToEdit, setMemberToEdit] = useState(null);
   const { addMember, editMember } = useContext(MemberContext);
   const { mode, id } = useParams();
-  const { members: member, getMember } = useAPI();
   const history = useHistory();
 
   useEffect(() => {
     if (mode === "add") return;
-    getMember(id);
-  }, [id, mode]);
+    fetch("http://localhost:8080/" + id)
+      .then((res) => res.json())
+      .then((data) => setMemberToEdit(data));
+  }, [id]);
 
   useEffect(() => {
-    if (mode === "add" || !member) return;
+    if (mode === "add" || !memberToEdit) return;
     setInputs({
-      name: member.name || "",
-      catchPhrase: member.catchPhrase || "",
+      name: memberToEdit.name || "",
+      catchPhrase: memberToEdit.catchPhrase || "",
     });
-  }, [member, mode]);
+  }, [memberToEdit, mode]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
