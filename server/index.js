@@ -72,7 +72,11 @@ app.post("/", (req, res) => {
     if (err) return res.status(400).send("Error reading file");
 
     const members = JSON.parse(data);
-    const member = { id: calculateNextId(members), ...req.body };
+    const member = {
+      id: calculateNextId(members),
+      ...req.body,
+      createdAt: new Date().toString(),
+    };
 
     if (member) {
       members.push(member);

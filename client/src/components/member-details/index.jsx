@@ -11,7 +11,7 @@ const MemberDetails = () => {
 
   useEffect(() => {
     getMember(id);
-  }, [id, getMember]);
+  }, [id]);
 
   if (loading || !member) return <h1>Loading... </h1>;
 
@@ -21,6 +21,7 @@ const MemberDetails = () => {
       <div className="content">
         <h3 className="name">{member.name}</h3>
         <p className="catch-phrase">{member.catchPhrase}</p>
+        <p>{member.createdAt}</p>
       </div>
     </div>
   );
