@@ -1,0 +1,32 @@
+.form {
+  display: grid;
+  place-content: center;
+
+  .row {
+    display: flex;
+    align-items: center;
+
+    margin-top: 0.5rem;
+
+    label {
+      margin-right: 0.5rem;
+    }
+
+    input {
+      flex-grow: 1;
+      padding: 0.3rem;
+    }
+  }
+
+  .submit {
+    background-color: #323232;
+    color: #eee;
+    outline: none;
+    border: none;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0 !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}

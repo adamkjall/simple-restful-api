@@ -1,0 +1,33 @@
+.card-list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 18rem));
+  justify-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 2rem;
+  overflow: auto;
+
+  .add-btn {
+    display: grid;
+    place-items: center;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #eee;
+    border-radius: 50%;
+    box-shadow: 2px 4px 7px rgba(0, 0, 0, 0.6);
+    transition: 0.2s ease;
+    font-size: 4rem;
+    cursor: pointer;
+    width: 6rem;
+    height: 6rem;
+    text-decoration: none;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 4px 6px 9px rgba(0, 0, 0, 0.7);
+    }
+
+    .icon {
+    }
+  }
+}

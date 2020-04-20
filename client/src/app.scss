@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "Benny";
+  src: url("./assets/Benny-Benasi-Font-Remake.woff") format("woff");
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Benny", monospace, sans-serif;
+  text-shadow: 1px 1px 3px #14ffec;
+}
+
+body {
+  font-family: monospace, sans-serif;
+  background: linear-gradient(
+    55deg,
+    #212121 0%,
+    #212121 40%,
+    #323232 calc(40% + 1px),
+    #323232 60%,
+    #008f95 calc(60% + 1px),
+    #008f95 70%,
+    #14ffec calc(70% + 1px),
+    #14ffec 100%
+  );
+  overflow: hidden;
+}
+
+.app {
+  height: 100vh;
+  position: relative;
+}
+
+header {
+  text-align: center;
+  padding-top: 0.5rem;
+  height: 10%;
+}
+
+main {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  height: 90%;
+  padding: 1rem 0 2rem 0;
+}

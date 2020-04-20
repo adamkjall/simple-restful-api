@@ -4,87 +4,118 @@ const cors = require("cors");
 
 const app = express();
 
+const filename = "./data.json";
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // GET
-app.get("/", (req, res) => {
-  fs.readFile("./data.json", (err, data) => {
-    if (err) throw err;
-    res.send(JSON.parse(data));
+app.get("/", async (req, res) => {
+  fs.readFile(filename, (err, data) => {
+    if (err) return res.status(400).send("Error reading file");
+    const members = JSON.parse(data);
+    res.send(members);
   });
 });
 
-// UPDATE
-app.put("/:id", (req, res) => {
-  let rawData = fs.readFileSync("./data.json");
-  const members = JSON.parse(rawData);
+// GET with id
+app.get("/:id", (req, res) => {
+  fs.readFile(filename, (err, data) => {
+    if (err) return res.status(400).send("Error reading file");
+    const members = JSON.parse(data);
+    const memberToFind = members.find(
+      (member) => member.id === Number(req.params.id)
+    );
 
-  let member = members.find((member) => member.id === Number(req.params.id));
-  const newMemberData = req.body;
+    if (!memberToFind) {
+      return res
+        .status(400)
+        .send(`Member with id: ${req.params.id} not found.`);
+    }
 
-  if (member) {
-    member = {
-      ...member,
-      ...newMemberData,
-    };
-
-    const indexOfMember = members.findIndex((m) => m.id === member.id);
-
-    members[indexOfMember] = member;
-
-    res.send(members);
-    fs.writeFileSync("./data.json", JSON.stringify(members));
-  }
+    res.send(memberToFind);
+  });
 });
 
-// POST
-app.post("/", (req, res) => {
-  let rawData = fs.readFileSync("./data.json");
-  const members = JSON.parse(rawData);
-  const member = req.body;
+// EDIT
+app.put("/:id", (req, res) => {
+  fs.readFile(filename, (err, data) => {
+    if (err) return res.status(400).send("Error reading file");
 
-  if (member) {
-    members.push({
-      id: calculateNextId(),
-      ...member,
+    let updatedMember = null;
+    let members = JSON.parse(data);
+
+    members = members.map((member) => {
+      if (member.id === Number(req.params.id)) {
+        updatedMember = {
+          ...member,
+          ...req.body,
+        };
+        return updatedMember;
+      }
+      return member;
     });
 
-    res.send(members);
-    fs.writeFileSync("./data.json", JSON.stringify(members));
-  }
+    fs.writeFile(filename, JSON.stringify(members), (err) => {
+      if (err) return res.status(400).send("Error writing to file");
+
+      res.send(updatedMember);
+    });
+  });
+});
+
+// ADD
+app.post("/", (req, res) => {
+  fs.readFile(filename, (err, data) => {
+    if (err) return res.status(400).send("Error reading file");
+
+    const members = JSON.parse(data);
+    const member = { id: calculateNextId(members), ...req.body };
+
+    if (member) {
+      members.push(member);
+
+      fs.writeFile(filename, JSON.stringify(members), (err) => {
+        if (err) return res.status(400).send("Error writing to file");
+
+        res.send(member);
+      });
+    }
+  });
 });
 
 // DELETE
 app.delete("/:id", (req, res) => {
-  let rawData = fs.readFileSync("./data.json");
-  let members = JSON.parse(rawData);
+  fs.readFile(filename, (err, data) => {
+    if (err) return res.status(400).send("Error reading file");
 
-  const memberToDelete = members.find(
-    (member) => member.id === Number(req.params.id)
-  );
+    let members = JSON.parse(data);
+    const memberToDelete = members.find(
+      (member) => member.id === Number(req.params.id)
+    );
 
-  if (memberToDelete) {
+    if (!memberToDelete) {
+      return res
+        .status(400)
+        .json({ msg: `No member with the id: ${req.params.id}` });
+    }
+
     members = members.filter((member) => member.id !== memberToDelete.id);
-    res.send(members);
-    fs.writeFileSync("./data.json", JSON.stringify(members));
-  } else {
-    res.status(400).json({ msg: `No member with the id: ${req.params.id}` });
-  }
+
+    fs.writeFile(filename, JSON.stringify(members), (err) => {
+      if (err) return res.status(400).send("Error writing to file");
+
+      res.send(memberToDelete);
+    });
+  });
 });
 
-const calculateNextId = () => {
-  let rawData = fs.readFileSync("./data.json");
-  const members = JSON.parse(rawData);
-  if (members) {
-    return (
-      members.reduce((acc, member) => (acc < member.id ? member.id : acc), 0) +
-      1
-    );
-  }
-  return 0;
+const calculateNextId = (members) => {
+  return (
+    members.reduce((acc, member) => (acc < member.id ? member.id : acc), 0) + 1
+  );
 };
 
 const PORT = 8080;

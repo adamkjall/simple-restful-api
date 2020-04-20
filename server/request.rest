@@ -1,0 +1,35 @@
+// GET ALL
+GET http://localhost:8080
+
+###
+
+// GET MEMBER BY ID
+GET http://localhost:8080/46
+
+###
+
+// ADD NEW MEMBER
+POST http://localhost:8080
+Content-Type: application/json
+
+{
+  "name": "Raoul Duke",
+  "catchPhrase": "Good people drink good beer."
+}
+
+
+###
+
+// UPDATE MEMBER BY ID
+PUT http://localhost:8080/46
+Content-Type: application/json
+
+{
+  "name": "Raoul Duke",
+  "catchPhrase": "Good people drink good wine."
+}
+
+###
+
+// DELETE MEMBER BY ID
+DELETE http://localhost:8080/48
